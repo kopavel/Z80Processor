@@ -1,4 +1,4 @@
-package com.codingrodent.microprocessor.Io;
+package com.codingrodent.microprocessor.io.queue;
 
 public interface IoQueue {
     void writeWord(int address, int value);
@@ -11,7 +11,7 @@ public interface IoQueue {
 
     void ioRead(int address, Callback callback);
 
-    void IOWrite(Integer address, int value);
+    void ioWrite(int address, int value);
 
     void clear();
 }

@@ -1,4 +1,4 @@
-package com.codingrodent.microprocessor.Io;
+package com.codingrodent.microprocessor.io.queue;
 
 @FunctionalInterface
 public interface Callback {

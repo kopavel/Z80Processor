@@ -1,4 +1,4 @@
-package com.codingrodent.microprocessor.Io;
+package com.codingrodent.microprocessor.io.queue;
 
 import com.codingrodent.microprocessor.IBaseDevice;
 import com.codingrodent.microprocessor.IMemory;
@@ -38,7 +38,7 @@ public class SyncIoQueue implements IoQueue {
     }
 
     @Override
-    public void IOWrite(Integer address, int value) {
+    public void ioWrite(int address, int value) {
         ioDevice.IOWrite(address, value);
     }
 

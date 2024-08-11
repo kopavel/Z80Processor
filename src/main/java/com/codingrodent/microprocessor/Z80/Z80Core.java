@@ -18,9 +18,9 @@ import com.codingrodent.microprocessor.IBaseDevice;
 import com.codingrodent.microprocessor.ICPU;
 import com.codingrodent.microprocessor.ICPUData;
 import com.codingrodent.microprocessor.IMemory;
-import com.codingrodent.microprocessor.Io.Callback;
-import com.codingrodent.microprocessor.Io.IoQueue;
-import com.codingrodent.microprocessor.Io.SyncIoQueue;
+import com.codingrodent.microprocessor.io.queue.Callback;
+import com.codingrodent.microprocessor.io.queue.IoQueue;
+import com.codingrodent.microprocessor.io.queue.SyncIoQueue;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.function.Consumer;
@@ -3052,7 +3052,7 @@ public class Z80Core implements ICPU, ICPUData {
     /* OUT (NN),A */
     private void outNA() {
         getInOutAddressRegA(address -> {
-            ioQueue.IOWrite(address, reg_A);
+            ioQueue.ioWrite(address, reg_A);
             incPC();
             reg_R++;
         });
@@ -3101,7 +3101,7 @@ public class Z80Core implements ICPU, ICPUData {
 
     /* OUT (rr),c */
     private void outC(int reg) {
-        ioQueue.IOWrite(getBC(), get8BitRegister(reg));
+        ioQueue.ioWrite(getBC(), get8BitRegister(reg));
     }
 
     private void testBit(int v, int bit) {
@@ -3341,7 +3341,7 @@ public class Z80Core implements ICPU, ICPUData {
     }
 
     private void OUTI(int value) {
-        ioQueue.IOWrite(getBC(), value);
+        ioQueue.ioWrite(getBC(), value);
         reg_R++;
         reg_B = (reg_B - 1) & lsb;
         setHL(ALU16BitInc(getHL()));
@@ -3364,7 +3364,7 @@ public class Z80Core implements ICPU, ICPUData {
     }
 
     private void OUTD(int value) {
-        ioQueue.IOWrite(getBC(), value);
+        ioQueue.ioWrite(getBC(), value);
         reg_R++;
         reg_B = (reg_B - 1) & lsb;
         setHL(ALU16BitDec(getHL()));
