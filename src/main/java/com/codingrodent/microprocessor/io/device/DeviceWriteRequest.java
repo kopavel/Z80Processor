@@ -1,10 +1,10 @@
 package com.codingrodent.microprocessor.io.device;
 
-public class DeviceWriteRequest extends DeviceRequest {
-    public final int payload;
 
+import com.codingrodent.microprocessor.io.queue.WriteRequest;
+
+public class DeviceWriteRequest extends WriteRequest implements DeviceRequest {
     public DeviceWriteRequest(int address, int payload) {
-        super(address);
-        this.payload = payload;
+        super(address, payload);
     }
 }

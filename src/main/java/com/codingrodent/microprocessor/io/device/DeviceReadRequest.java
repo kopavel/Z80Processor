@@ -1,12 +1,10 @@
 package com.codingrodent.microprocessor.io.device;
 
 import com.codingrodent.microprocessor.io.queue.Callback;
+import com.codingrodent.microprocessor.io.queue.ReadRequest;
 
-public class DeviceReadRequest extends DeviceRequest {
-    public final Callback callback;
-
+public class DeviceReadRequest extends ReadRequest implements DeviceRequest {
     public DeviceReadRequest(int address, Callback callback) {
-        super(address);
-        this.callback = callback;
+        super(address, callback);
     }
 }

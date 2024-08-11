@@ -1,10 +1,9 @@
 package com.codingrodent.microprocessor.io.memory;
 
-public class MemoryWriteRequest extends MemoryRequest {
-    public final int payload;
+import com.codingrodent.microprocessor.io.queue.WriteRequest;
 
+public class MemoryWriteRequest extends WriteRequest implements MemoryRequest {
     public MemoryWriteRequest(int address, int payload) {
-        super(address);
-        this.payload = payload;
+        super(address, payload);
     }
 }
