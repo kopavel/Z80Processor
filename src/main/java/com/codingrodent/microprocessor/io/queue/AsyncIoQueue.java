@@ -5,23 +5,22 @@ import com.codingrodent.microprocessor.io.device.DeviceWriteRequest;
 import com.codingrodent.microprocessor.io.memory.MemoryReadRequest;
 import com.codingrodent.microprocessor.io.memory.MemoryWriteRequest;
 
-public class AsyncIoQueue implements IoQueue {
-    public final RingBuffer<Request> requests = new RingBuffer<>(10);
+public class AsyncIoQueue extends RequestQueue implements IoQueue {
 
     @Override
     public void writeWord(int address, int value) {
-        requests.add(new MemoryWriteRequest(address, value & 0xff));
-        requests.add(new MemoryWriteRequest(address + 1, value >> 8));
+        add(new MemoryWriteRequest(address, value & 0xff));
+        add(new MemoryWriteRequest(address + 1, value >> 8));
     }
 
     @Override
     public void writeByte(int address, int value) {
-        requests.add(new MemoryWriteRequest(address, value));
+        add(new MemoryWriteRequest(address, value));
     }
 
     @Override
     public void readByte(int address, Callback callback) {
-        requests.add(new MemoryReadRequest(address, callback));
+        add(new MemoryReadRequest(address, callback));
     }
 
     @Override
@@ -31,16 +30,12 @@ public class AsyncIoQueue implements IoQueue {
 
     @Override
     public void ioRead(int address, Callback callback) {
-        requests.add(new DeviceReadRequest(address, callback));
+        add(new DeviceReadRequest(address, callback));
     }
 
     @Override
     public void ioWrite(int address, int value) {
-        requests.add(new DeviceWriteRequest(address, value));
+        add(new DeviceWriteRequest(address, value));
     }
 
-    @Override
-    public void clear() {
-        requests.clear();
-    }
 }
