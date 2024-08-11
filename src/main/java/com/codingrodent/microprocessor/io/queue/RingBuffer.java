@@ -1,11 +1,11 @@
 package com.codingrodent.microprocessor.io.queue;
 
 public class RingBuffer<T> {
+    public final int capacity;
     private final T[] buffer;
-    private final int capacity;
+    public int size;
     private int head;
     private int tail;
-    private int size;
 
     @SuppressWarnings("unchecked")
     public RingBuffer(int capacity) {
@@ -27,23 +27,25 @@ public class RingBuffer<T> {
     }
 
     // Pull (remove and return) the head element from the buffer
-    public T pull() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Buffer is empty");
+    public T poll() {
+        if (size == 0) {
+            return null;
+        } else {
+            T item = buffer[head];
+            buffer[head] = null;  // Optional: Help garbage collection
+            head = (head + 1) % capacity;
+            size--;
+            return item;
         }
-        T item = buffer[head];
-        buffer[head] = null;  // Optional: Help garbage collection
-        head = (head + 1) % capacity;
-        size--;
-        return item;
     }
 
     // Peek at the head element without removing it
     public T peek() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Buffer is empty");
+        if (size == 0) {
+            return null;
+        } else {
+            return buffer[head];
         }
-        return buffer[head];
     }
 
     // Check if the buffer is empty
@@ -53,21 +55,9 @@ public class RingBuffer<T> {
 
     // Clear the buffer
     public void clear() {
-        for (int i = 0; i < capacity; i++) {
-            buffer[i] = null;
-        }
         head = 0;
         tail = 0;
         size = 0;
     }
 
-    // Get the current size of the buffer
-    public int size() {
-        return size;
-    }
-
-    // Get the capacity of the buffer
-    public int capacity() {
-        return capacity;
-    }
 }
