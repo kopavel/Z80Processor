@@ -5,7 +5,7 @@ import com.codingrodent.microprocessor.io.device.DeviceWriteRequest;
 import com.codingrodent.microprocessor.io.memory.MemoryReadRequest;
 import com.codingrodent.microprocessor.io.memory.MemoryWriteRequest;
 
-public class AsyncIoQueue extends RequestQueue implements IoQueue {
+public class AsyncIoQueue extends SimpleFastQueue implements IoQueue {
 
     @Override
     public void writeWord(int address, int value) {
