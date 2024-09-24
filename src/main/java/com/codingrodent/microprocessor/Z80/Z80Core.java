@@ -45,9 +45,8 @@ public class Z80Core implements ICPU, ICPUData {
     private int reg_IY;
     private int reg_SP;
     private int reg_A, reg_A_ALT, reg_F, reg_F_ALT, reg_I, reg_R, reg_R8;
-    private boolean EIDIFlag;
+    //private boolean EIDIFlag;
     private boolean IFF1, IFF2;
-    private boolean NMI_FF;
     private int resetAddress;
     private boolean useIxReg;
 
@@ -80,10 +79,20 @@ public class Z80Core implements ICPU, ICPUData {
     }
 
     /**
-     * Initiate an NMI request
+     * Process NMI request
      */
-    public void setNMI() {
-        NMI_FF = true;
+    public void processNMI() {
+        // Can't interrupt straight after an EI or DI
+        // ?? it's only for maskable interrupt.
+        // if (!EIDIFlag) {
+        IFF2 = IFF1; // store IFF state
+        if (halt) {
+            incPC(); // Point to instruction after interrupt location. HALT decrements PC.
+        }
+        dec2SP();
+        ioQueue.writeWord(reg_SP, reg_PC);
+        reg_PC = 0x0066; // NMI routine location
+        // }
     }
 
     /**
@@ -191,26 +200,11 @@ public class Z80Core implements ICPU, ICPUData {
      * is updated along with the T state count.
      */
     public void executeOneInstruction() {
-        //
-        // NMI check first
-        if (NMI_FF) {
-            // can't interrupt straight after an EI or DI
-            if (!EIDIFlag) {
-                NMI_FF = false; // interrupt accepted
-                IFF2 = IFF1; // store IFF state
-                dec2SP();
-                if (halt) {
-                    incPC(); // Was a bug ! - point to instruction after(!) interrupt location. HALT decrements PC !!!
-                }
-                ioQueue.writeWord(reg_SP, reg_PC);
-                reg_PC = 0x0066; // NMI routine location
-            }
-        }
         halt = false;
         ioQueue.readByte(reg_PC, b -> {
             instruction = b;
             incPC();
-            EIDIFlag = false; // clear prior to decoding next instruction
+//            EIDIFlag = false; // clear before decoding next instruction
             decodeOneByteInstruction(instruction);
         });
     }
@@ -303,8 +297,7 @@ public class Z80Core implements ICPU, ICPUData {
         reg_IX = reg_IY = reg_SP = 0;
         reg_A = reg_A_ALT = reg_F = reg_F_ALT = reg_I = reg_R = reg_R8 = 0;
         IFF1 = IFF2 = false;
-        EIDIFlag = false;
-        NMI_FF = false;
+//        EIDIFlag = false;
         reg_PC = resetAddress;
         tStates = 0;
     }
@@ -3027,13 +3020,13 @@ public class Z80Core implements ICPU, ICPUData {
     private void DI() {
         IFF1 = false;
         IFF2 = false; // load both
-        EIDIFlag = true;
+        //EIDIFlag = true;
     }
 
     private void EI() {
         IFF1 = true;
         IFF2 = true; // load both
-        EIDIFlag = true;
+        //EIDIFlag = true;
     }
 
     /*

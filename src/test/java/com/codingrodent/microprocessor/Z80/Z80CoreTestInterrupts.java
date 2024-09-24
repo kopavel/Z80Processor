@@ -15,8 +15,11 @@
 package com.codingrodent.microprocessor.Z80;
 
 import com.codingrodent.microprocessor.Z80.CPUConstants.RegisterNames;
-import com.codingrodent.microprocessor.support.*;
-import org.junit.jupiter.api.*;
+import com.codingrodent.microprocessor.support.Z80IO;
+import com.codingrodent.microprocessor.support.Z80Memory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -116,7 +119,7 @@ public class Z80CoreTestInterrupts {
                 z80.executeOneInstruction();
                 if (nmi) {
                     nmi = false;
-                    z80.setNMI();
+                    z80.processNMI();
                 }
             } catch (Exception e) {
                 System.out.println("Hardware crash, oops! " + e.getMessage());
@@ -187,7 +190,7 @@ public class Z80CoreTestInterrupts {
                 // System.out.println(utilities.getWord(z80.getRegisterValue(RegisterNames.PC)));
                 z80.executeOneInstruction();
                 if (--nmiCount == 0) { // dec and test
-                    z80.setNMI(); // force the NMI after N instructions
+                    z80.processNMI(); // force the NMI after N instructions
                 }
             } catch (Exception e) {
                 System.out.println("Hardware crash, oops! " + e.getMessage());
