@@ -44,7 +44,6 @@ task setVersion {
 
 
 jar {
-    baseName = projectName
     manifest
             {
                 attributes 'Implementation-Title': projectName,
@@ -86,13 +85,13 @@ test {
     }
 }
 
-jacocoTestReport {
+/*jacocoTestReport {
     reports {
         xml.enabled true
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
     }
-}
+}*/
 
 
 spotbugs {
