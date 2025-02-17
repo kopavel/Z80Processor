@@ -86,6 +86,7 @@ public class AsyncIoQueue implements IoQueue {
     public void clear() {
         request = write;
         write.address = -1;
+        write.next=write;
     }
 
     public void next() {
